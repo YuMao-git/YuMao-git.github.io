@@ -1,1 +1,145 @@
-<h1>你好</h1>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简洁搜索引擎</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .search-container h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #2980b9;
+        }
+
+        .search-button {
+            padding: 15px 30px;
+            background: #3498db;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .search-button:hover {
+            background: #2980b9;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .quick-link {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.2s;
+        }
+
+        .quick-link:hover {
+            transform: translateY(-3px);
+        }
+
+        .quick-link img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 500px) {
+            .search-container {
+                padding: 30px 20px;
+            }
+            
+            .quick-links {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h1>快速搜索</h1>
+        <form action="https://www.google.com/search" method="GET" target="_blank">
+            <div class="search-box">
+                <input type="text" name="q" class="search-input" placeholder="输入关键词..." required>
+                <button type="submit" class="search-button">搜索</button>
+            </div>
+        </form>
+        
+        <div class="quick-links">
+            <a href="https://www.google.com" class="quick-link" target="_blank">
+                <img src="https://www.google.com/favicon.ico" alt="Google">
+                Google
+            </a>
+            <a href="https://www.bing.com" class="quick-link" target="_blank">
+                <img src="https://www.bing.com/favicon.ico" alt="Bing">
+                Bing
+            </a>
+            <a href="https://www.wikipedia.org" class="quick-link" target="_blank">
+                <img src="https://www.wikipedia.org/favicon.ico" alt="Wikipedia">
+                Wikipedia
+            </a>
+            <a href="https://github.com" class="quick-link" target="_blank">
+                <img src="https://github.com/favicon.ico" alt="GitHub">
+                GitHub
+            </a>
+            <a href="https://www.youtube.com" class="quick-link" target="_blank">
+                <img src="https://www.youtube.com/favicon.ico" alt="YouTube">
+                YouTube
+            </a>
+            <a href="https://www.amazon.com" class="quick-link" target="_blank">
+                <img src="https://www.amazon.com/favicon.ico" alt="Amazon">
+                Amazon
+            </a>
+        </div>
+    </div>
+</body>
+</html>
