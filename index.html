@@ -3,143 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>简洁搜索引擎</title>
+    <title>网页收藏管理</title>
     <style>
+        :root {
+            --primary: #6c9bcf;
+            --secondary: #a8c8e6;
+            --bg: #f5f9ff;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --shadow: rgba(102, 153, 204, 0.1);
+        }
+
         body {
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.6;
             margin: 0;
+            padding: 2rem;
+            background: var(--bg);
             min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
 
-        .search-container {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 600px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
             text-align: center;
+            margin-bottom: 2rem;
         }
 
-        .search-container h1 {
-            color: #2c3e50;
-            margin-bottom: 30px;
-            font-size: 2.5em;
+        .header h1 {
+            color: var(--text);
+            font-weight: 300;
+            margin: 0;
         }
 
-        .search-box {
+        .category-manager {
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
         }
 
-        .search-input {
+        .category-input {
             flex: 1;
-            padding: 15px;
-            border: 2px solid #3498db;
-            border-radius: 8px;
-            font-size: 16px;
+            min-width: 200px;
+            padding: 0.75rem;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.2s;
+            background: var(--card-bg);
         }
 
-        .search-input:focus {
-            border-color: #2980b9;
+        .category-input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(102, 153, 204, 0.2);
         }
 
-        .search-button {
-            padding: 15px 30px;
-            background: #3498db;
-            border: none;
-            border-radius: 8px;
+        .add-category-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
             color: white;
-            font-size: 16px;
+            border: none;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.2s;
+            font-weight: 500;
         }
 
-        .search-button:hover {
-            background: #2980b9;
+        .add-category-btn:hover {
+            background: #5a8dc1;
         }
 
-        .quick-links {
+        .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .quick-link {
-            background: #ecf0f1;
-            padding: 20px;
-            border-radius: 10px;
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 6px 12px -2px var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px -5px var(--shadow);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .category-title {
+            font-size: 1.25rem;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .link-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .link-item {
+            padding: 0.75rem;
+            background: #e8f4ff;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .link-item:hover {
+            background: #d1eaff;
+        }
+
+        .link-name {
+            color: var(--primary);
             text-decoration: none;
-            color: #333;
-            transition: transform 0.2s;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 0.25rem;
         }
 
-        .quick-link:hover {
-            transform: translateY(-3px);
+        .link-url {
+            color: #666;
+            font-size: 0.875rem;
+            word-break: break-all;
         }
 
-        .quick-link img {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 10px;
+        .link-description {
+            color: #777;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
         }
 
-        @media (max-width: 500px) {
-            .search-container {
-                padding: 30px 20px;
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            margin: 10% auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(102, 153, 204, 0.2);
+            animation: floatIn 0.4s ease-out;
+        }
+
+        @keyframes floatIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
             }
-            
-            .quick-links {
-                grid-template-columns: repeat(3, 1fr);
+            to {
+                transform: translateY(0);
+                opacity: 1;
             }
+        }
+
+        .modal-close {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text);
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            background: var(--card-bg);
+            transition: all 0.2s;
+        }
+
+        .modal-input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(102, 153, 204, 0.2);
+        }
+
+        .modal-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .modal-btn:hover {
+            background: #5a8dc1;
         }
     </style>
 </head>
 <body>
-    <div class="search-container">
-        <h1>快速搜索</h1>
-        <form action="https://www.google.com/search" method="GET" target="_blank">
-            <div class="search-box">
-                <input type="text" name="q" class="search-input" placeholder="输入关键词..." required>
-                <button type="submit" class="search-button">搜索</button>
+    <div class="container">
+        <div class="header">
+            <h1>网页收藏管理</h1>
+        </div>
+
+        <div class="category-manager">
+            <input type="text" class="category-input" id="newCategoryInput" placeholder="输入新分类名称">
+            <button class="add-category-btn" onclick="addCategory()">添加分类</button>
+        </div>
+
+        <div class="category-grid" id="categoryContainer"></div>
+    </div>
+
+    <!-- 添加链接模态框 -->
+    <div id="addLinkModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2 style="margin-top: 0;">添加链接到 <span id="modalCategory"></span></h2>
+            
+            <div style="margin: 1.5rem 0;">
+                <input type="text" class="modal-input" id="modalName" placeholder="输入网页名称">
+                <input type="text" class="modal-input" id="modalUrl" placeholder="输入网页URL">
+                <textarea class="modal-input" id="modalDesc" placeholder="添加描述（可选）" rows="3"></textarea>
             </div>
-        </form>
-        
-        <div class="quick-links">
-            <a href="https://www.google.com" class="quick-link" target="_blank">
-                <img src="https://www.google.com/favicon.ico" alt="Google">
-                Google
-            </a>
-            <a href="https://www.bing.com" class="quick-link" target="_blank">
-                <img src="https://www.bing.com/favicon.ico" alt="Bing">
-                Bing
-            </a>
-            <a href="https://www.wikipedia.org" class="quick-link" target="_blank">
-                <img src="https://www.wikipedia.org/favicon.ico" alt="Wikipedia">
-                Wikipedia
-            </a>
-            <a href="https://github.com" class="quick-link" target="_blank">
-                <img src="https://github.com/favicon.ico" alt="GitHub">
-                GitHub
-            </a>
-            <a href="https://www.youtube.com" class="quick-link" target="_blank">
-                <img src="https://www.youtube.com/favicon.ico" alt="YouTube">
-                YouTube
-            </a>
-            <a href="https://www.amazon.com" class="quick-link" target="_blank">
-                <img src="https://www.amazon.com/favicon.ico" alt="Amazon">
-                Amazon
-            </a>
+            
+            <button class="modal-btn" onclick="submitLink()">保存链接</button>
         </div>
     </div>
+
+    <script>
+        let categories = JSON.parse(localStorage.getItem('categories')) || ['默认分类'];
+        let links = JSON.parse(localStorage.getItem('savedLinks')) || [];
+        const defaultCategory = '默认分类';
+        let currentCategory = defaultCategory;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+        });
+
+        function renderCategories() {
+            const container = document.getElementById('categoryContainer');
+            container.innerHTML = '';
+
+            categories.forEach(category => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = `
+                    <h3 class="category-title">${category}</h3>
+                    <button class="add-category-btn" onclick="openModal('${category}')">+</button>
+                `;
+
+                const linkList = document.createElement('ul');
+                linkList.className = 'link-list';
+
+                const filteredLinks = links.filter(link => link.category === category);
+                filteredLinks.forEach(link => {
+                    const item = document.createElement('li');
+                    item.className = 'link-item';
+                    
+                    item.innerHTML = `
+                        <a class="link-name" href="${link.url}" target="_blank">${link.name}</a>
+                        <div class="link-url">${link.url}</div>
+                        ${link.description ? `<div class="link-description">${link.description}</div>` : ''}
+                    `;
+                    
+                    linkList.appendChild(item);
+                });
+
+                card.appendChild(header);
+                card.appendChild(linkList);
+                container.appendChild(card);
+            });
+        }
+
+        function openModal(category) {
+            currentCategory = category;
+            document.getElementById('modalCategory').textContent = category;
+            document.getElementById('addLinkModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('addLinkModal').style.display = 'none';
+            document.getElementById('modalName').value = '';
+            document.getElementById('modalUrl').value = '';
+            document.getElementById('modalDesc').value = '';
+        }
+
+        function submitLink() {
+            const name = document.getElementById('modalName').value.trim();
+            const url = document.getElementById('modalUrl').value.trim();
+            const desc = document.getElementById('modalDesc').value.trim();
+
+            if (!name || !url) {
+                alert('名称和URL为必填项');
+                return;
+            }
+
+            if (!/^https?:\/\//i.test(url)) {
+                alert('URL 必须以 http:// 或 https:// 开头');
+                return;
+            }
+
+            const newLink = { name, url, description: desc, category: currentCategory };
+            links.push(newLink);
+            saveData();
+            closeModal();
+            renderCategories();
+        }
+
+        function addCategory() {
+            const input = document.getElementById('newCategoryInput');
+            const newCategory = input.value.trim();
+            
+            if (!newCategory) {
+                alert('请输入分类名称');
+                return;
+            }
+            
+            if (categories.includes(newCategory)) {
+                alert('该分类已存在');
+                return;
+            }
+            
+            categories.push(newCategory);
+            saveData();
+            input.value = '';
+            renderCategories();
+        }
+
+        function saveData() {
+            localStorage.setItem('savedLinks', JSON.stringify(links));
+            localStorage.setItem('categories', JSON.stringify(categories));
+        }
+    </script>
 </body>
 </html>
